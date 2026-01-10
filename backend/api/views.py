@@ -10,5 +10,4 @@ def api_home(request,*args, **kwargs):
     data = {}
     if instance:
         data = ProductSerializer(instance, many=True).data
-    
     return Response(data)
