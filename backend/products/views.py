@@ -1,12 +1,10 @@
-from rest_framework import generics, permissions, authentication 
+from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
-from .permissions import IsStaffEditorPermission
 from .models import Product
 from .serializers import ProductSerializer
-from api.authentication import TokenAuthentication
 from api.mixins import StaffEditorPermissionMixin
 
 class ProductListCreateAPIView(StaffEditorPermissionMixin,generics.ListCreateAPIView):
