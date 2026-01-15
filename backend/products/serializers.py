@@ -10,14 +10,27 @@ class ProductSerializer(serializers.ModelSerializer):
         lookup_field = "pk"
     )
 
+    email = serializers.EmailField(write_only=True)
+
     class Meta:
         model = Product
         fields = [
             'url',
+            "email",
             'title',
             'content',
             'price'
         ]
+
+    def create(self,validated_data):
+        email = validated_data.pop("email")
+        print(email)
+        return super().create(validated_data)
+    
+    def update(self, instance, validated_data):
+        email = validated_data.pop("email")
+        return super().update(instance, validated_data)
+
     # def get_url(self, obj):
     #     request = self.context.get("request")
     #     return reverse("product-detail",request=request, kwargs={"pk": obj.pk})
