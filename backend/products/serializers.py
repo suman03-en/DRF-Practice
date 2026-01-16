@@ -22,10 +22,9 @@ class ProductSerializer(serializers.ModelSerializer):
             'price'
         ]
 
-    def validate_title(value):
-        qs = Product.objects.filter(title__iexact=value)
-        if qs.exists():
-            raise serializers.ValidationError("error")
+    def validate_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError(f"price cannot be negative.")
         return value
     
     # def create(self,validated_data):
