@@ -10,7 +10,6 @@ class ProductSerializer(serializers.ModelSerializer):
         view_name ="product-detail",
         lookup_field = "pk"
     )
-
     # email = serializers.EmailField(write_only=True)
 
     class Meta:
@@ -40,8 +39,15 @@ class ProductSerializer(serializers.ModelSerializer):
         if not content:
             updated = "Automatic: " + title
             attrs["content"] = updated
-        return attrs
-     
+        return super().validate(attrs)
+    
+    
+    def create(self, validated_data):
+        user = self.context.get("request").user
+        validated_data["user"] = user
+        return super().create(validated_data)
+
+    
     # def create(self,validated_data):
     #     email = validated_data.pop("email")
     #     print(email)
