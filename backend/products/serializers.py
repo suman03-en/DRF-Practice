@@ -22,11 +22,26 @@ class ProductSerializer(serializers.ModelSerializer):
             'price'
         ]
 
+
     def validate_price(self, value):
+        """
+        Field level validation
+        """
         if value < 0:
             raise serializers.ValidationError(f"price cannot be negative.")
         return value
     
+    def validate(self, attrs):
+        """
+        Object level validation, called after all validation_fields.
+        """
+        title = attrs.get("title")
+        content = attrs.get("content")
+        if not content:
+            updated = "Automatic: " + title
+            attrs["content"] = updated
+        return attrs
+     
     # def create(self,validated_data):
     #     email = validated_data.pop("email")
     #     print(email)
