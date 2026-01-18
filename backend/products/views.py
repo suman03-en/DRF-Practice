@@ -1,30 +1,44 @@
 from rest_framework import generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import permissions
+
 from django.shortcuts import get_object_or_404
+
 
 from .models import Product
 from .serializers import ProductSerializer
+from .permissions import IsOwnerPermission
 from api.mixins import StaffEditorPermissionMixin
 
-class ProductListCreateAPIView(StaffEditorPermissionMixin,generics.ListCreateAPIView):
+class ProductListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    # def perform_create(self, serializer):
+    #     """Override this method to modify the serializer or obj before saving it"""
+
+    #     user = self.request.user
+    #     serializer.save(user=user)
+    #     #this is the another way to add the user to the model
+
+
+class ProductDetailAPIView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
-class ProductDetailAPIView(StaffEditorPermissionMixin,generics.RetrieveAPIView):
+class ProductUpdateAPIView(generics.UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
-
-class ProductUpdateAPIView(StaffEditorPermissionMixin,generics.UpdateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerPermission]
     lookup_field = 'pk'
 
-class ProductDeleteAPIView(StaffEditorPermissionMixin,generics.DestroyAPIView):
+class ProductDeleteAPIView(generics.DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerPermission]
 
 
 #can be done this way
