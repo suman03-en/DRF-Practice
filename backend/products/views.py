@@ -49,9 +49,14 @@ product_delete_view = ProductDeleteAPIView.as_view()
 
 #search api view
 class ProductSearchAPIView(generics.ListAPIView):
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsOwnerPermission]
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+        search_filter = self.request.query_params.get("query",None)
+        if search_filter:
+            queryset=queryset.filter(title__icontains=search_filter)
+        return queryset
 
 #function based api views
 @api_view(["GET","POST"])
