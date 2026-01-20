@@ -47,16 +47,6 @@ product_list_create_view = ProductListCreateAPIView.as_view()
 product_update_view = ProductUpdateAPIView.as_view()
 product_delete_view = ProductDeleteAPIView.as_view()
 
-#search api view
-class ProductSearchAPIView(generics.ListAPIView):
-    serializer_class = ProductSerializer
-
-    def get_queryset(self):
-        queryset = Product.objects.all()
-        search_filter = self.request.query_params.get("query",None)
-        if search_filter:
-            queryset=queryset.filter(title__icontains=search_filter)
-        return queryset
 
 #function based api views
 @api_view(["GET","POST"])

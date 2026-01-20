@@ -9,5 +9,5 @@ def api_home(request,*args, **kwargs):
     instance = Product.objects.all()
     data = {}
     if instance:
-        data = ProductSerializer(instance, many=True).data
+        data = ProductSerializer(instance, context={'request': request}, many=True).data
     return Response(data)
